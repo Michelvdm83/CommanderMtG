@@ -1,0 +1,8 @@
+.name-search {
+    background-color: aqua;
+    height: 20px;
+    width:fit-content;
+    padding: 2px;
+    margin: 2px;
+    border-radius: 10px;
+}

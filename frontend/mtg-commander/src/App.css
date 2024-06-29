@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  gap: 5px;
+}
+.nav-bar {
+  display: grid;
+  grid-template-columns: 0fr repeat(2, auto) 0fr;
+  width: 100%;
+  height: 75px;
+  justify-items: left;
+  align-items: center;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+.nav-bar-item {
+  margin: 0 10px;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.nav-bar-item:last-child {
+  margin-left: auto;
+}
+
+.search {
+}

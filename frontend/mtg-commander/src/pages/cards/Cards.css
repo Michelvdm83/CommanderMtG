@@ -1,0 +1,21 @@
+:root{
+    --backgroundC: "";
+    --imgDisplay: none;
+}
+
+.cards-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.hover-image {
+    position: absolute;
+    width: 150px;/*745x1040*/
+    height: 208px;
+    background-size:contain;
+    background-image: var(--backgroundC);
+    background-repeat: no-repeat;
+    display: var(--imgDisplay);
+    z-index: 10000;
+}
