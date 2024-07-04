@@ -19,7 +19,6 @@ public class CardController {
 
     @GetMapping
     public ResponseEntity<List<Card>> searchBy(@Valid SearchParams params) {//Pageable toevoegen
-
         Specification<Card> newPredicate = params.getSpecification();
         var list = cardRepository.findAll(newPredicate);
         return ResponseEntity.ok(list);
