@@ -14,30 +14,37 @@ function App() {
   const [cards, setCards] = useState([]);
   const [nameSearch, setNameSearch] = useState("");
 
-  const [messages, setMessages] = useState(["first", "second"]);
-  const eventSource = new EventSource("http://localhost:8080/subscription");
-  eventSource.addEventListener("message", (event) => {
-    console.log(event.data);
-    setMessages([...messages, event.data]);
-  });
+  const [messages, setMessages] = useState([]);
+  let eventSourceCreated = false;
 
   useEffect(() => {
-    console.log(nameSearch);
-    if (nameSearch.length < 3) {
-      console.log(nameSearch + ", in if");
+    if (eventSourceCreated) {
       return;
     }
-    console.log(2);
+    let eventSource = new EventSource("http://localhost:8080/subscription");
+    eventSource.addEventListener("message", (event) => updateMessages(event));
+    eventSource.onerror = () => eventSource.close();
+    eventSourceCreated = true;
+  }, []);
+
+  function updateMessages(event) {
+    setMessages((messages) => [...messages, event.data]);
+  }
+
+  useEffect(() => {}, [messages]);
+
+  useEffect(() => {
+    if (nameSearch.length < 3) {
+      return;
+    }
 
     axios
       .get(`http://localhost:8080?name=${nameSearch}`)
       .then((response) => {
         setCards(response.data);
-        console.log("check");
       })
       .catch((error) => {
         console.log(error);
-        console.log(3);
       });
   }, [nameSearch]);
 

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,14 +21,16 @@ public class CardController {
     private final CardRepository cardRepository;
     private final SseService sseService;
 
+
     @GetMapping("/subscription")
     public SseEmitter subscribeTest() {
+        System.out.println("sub");
         return sseService.subscribe();
     }
 
     @GetMapping
     public ResponseEntity<List<Card>> searchBy(@Valid SearchParams params) {//Pageable toevoegen
-        //sseService.sendEvent("new search done");
+        new Thread(() -> sseService.sendEvent("new search done at:" + new Date())).start();
 
         Specification<Card> newPredicate = params.getSpecification();
         var list = cardRepository.findAll(newPredicate);
