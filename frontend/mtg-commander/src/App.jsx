@@ -16,16 +16,51 @@ function App() {
 
   const [messages, setMessages] = useState([]);
   let eventSourceCreated = false;
+  let eventSource = null;
 
   useEffect(() => {
-    if (eventSourceCreated) {
+    if (eventSourceCreated || eventSource !== null) {
       return;
     }
-    let eventSource = new EventSource("http://localhost:8080/subscription");
+    eventSource = new EventSource("http://localhost:8080/subscription");
     eventSource.addEventListener("message", (event) => updateMessages(event));
-    eventSource.onerror = () => eventSource.close();
+    // eventSource.onmessage = (event) => updateMessages(event);
+    eventSource.addEventListener("error", () => eventSource.close());
+    // eventSource.onerror = () => eventSource.close();
     eventSourceCreated = true;
   }, []);
+
+  document.onvisibilitychange = (event) => {
+    //   if (document.hidden) {
+    //     if (eventSource !== null) {
+    //       // eventSource.onmessage = null;
+    //       // // eventSource.onerror = null;
+    //       // eventSource.removeEventListener("message", (event) =>
+    //       //   updateMessages(event)
+    //       // );
+    //       // eventSource.removeEventListener("error", () => eventSource.close());
+    console.log(event);
+  };
+  //   } else {
+  //     if (eventSource !== null) {
+  //       // eventSource.onmessage = null;
+  //       // eventSource.onerror = null;
+  //       eventSource.removeEventListener("message", (event) =>
+  //         updateMessages(event)
+  //       );
+  //       eventSource.removeEventListener("error", () => eventSource.close());
+  //       eventSource.close();
+  //       // eventSource = null;
+  //     } else {
+  //       eventSource = new EventSource("http://localhost:8080/subscription");
+  //     }
+  //     eventSource.addEventListener("message", (event) => updateMessages(event));
+  //     // eventSource.onmessage = (event) => updateMessages(event);
+  //     eventSource.addEventListener("error", () => eventSource.close());
+  //     // eventSource.onerror = () => eventSource.close();
+  //   }
+  //   console.log(eventSource);
+  // };
 
   function updateMessages(event) {
     setMessages((messages) => [...messages, event.data]);
