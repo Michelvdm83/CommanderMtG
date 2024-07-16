@@ -1,11 +1,13 @@
 package com.mvdmstudy.mtg.commander;
 
 import com.mvdmstudy.mtg.commander.card.CardRepository;
-import com.mvdmstudy.mtg.commander.card.CardScryfallDto;
-import com.mvdmstudy.mtg.commander.scryfallData.SetCardsList;
-import com.mvdmstudy.mtg.commander.scryfallData.SetDataList;
-import com.mvdmstudy.mtg.commander.scryfallData.SymbolsList;
-import com.mvdmstudy.mtg.commander.setData.SetDataRepository;
+import com.mvdmstudy.mtg.commander.cardset.CardSet;
+import com.mvdmstudy.mtg.commander.cardset.CardSetRepository;
+import com.mvdmstudy.mtg.commander.scryfallData.card.ScryfallCard;
+import com.mvdmstudy.mtg.commander.scryfallData.set.ScryfallCardSetsDataList;
+import com.mvdmstudy.mtg.commander.scryfallData.set.SetCardsList;
+import com.mvdmstudy.mtg.commander.scryfallData.symbol.ScryfallSymbol;
+import com.mvdmstudy.mtg.commander.scryfallData.symbol.ScryfallSymbolsList;
 import com.mvdmstudy.mtg.commander.symbol.SymbolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -21,33 +23,34 @@ import java.net.URISyntaxException;
 public class Seeder implements CommandLineRunner {
     private final SymbolRepository symbolRepository;
     private final CardRepository cardRepository;
-    private final SetDataRepository setDataRepository;
+    private final CardSetRepository cardSetRepository;
     private final RestClient restClient = RestClient.create();
 
     @Override
     public void run(String... args) throws URISyntaxException {
         if (symbolRepository.findAll().isEmpty()) {
-            SymbolsList symbols = restClient.get().uri("https://api.scryfall.com/symbology")
+            ScryfallSymbolsList symbols = restClient.get().uri("https://api.scryfall.com/symbology")
                     .accept(MediaType.APPLICATION_JSON).retrieve()
-                    .body(SymbolsList.class);
+                    .body(ScryfallSymbolsList.class);
 
             if (symbols == null || symbols.data() == null) throw new RuntimeException("symbols not found");
 
-            symbolRepository.saveAll(symbols.data());
+            symbolRepository.saveAll(symbols.data().stream().map(ScryfallSymbol::toSymbol).toList());
         }
 
-        if (setDataRepository.findAll().isEmpty()) {
-            SetDataList sets = restClient.get().uri("https://api.scryfall.com/sets")
+        if (cardSetRepository.findAll().isEmpty()) {
+            ScryfallCardSetsDataList sets = restClient.get().uri("https://api.scryfall.com/sets")
                     .accept(MediaType.APPLICATION_JSON).retrieve()
-                    .body(SetDataList.class);
+                    .body(ScryfallCardSetsDataList.class);
 
             if (sets == null || sets.data() == null) throw new RuntimeException("sets not found");
 
-            setDataRepository.saveAll(sets.data());
+            cardSetRepository.saveAll(sets.data().stream().map(CardSet::new).toList());
         }
         if (cardRepository.findAll().isEmpty()) {
-            var allSets = setDataRepository.findAll();
-            String searchUri = allSets.getLast().getSearch_uri();
+            var allSets = cardSetRepository.findAll();
+            var currentSet = allSets.stream().filter(set -> set.getCode().equalsIgnoreCase("mh3")).findFirst().orElse(allSets.getFirst());
+            String searchUri = currentSet.getSearchUri();
 
             boolean more;
             do {
@@ -55,7 +58,12 @@ public class Seeder implements CommandLineRunner {
                 SetCardsList setCardsPage = restClient.get().uri(new URI(searchUri))
                         .accept(MediaType.APPLICATION_JSON).retrieve()
                         .body(SetCardsList.class);
-                cardRepository.saveAll(setCardsPage.data().stream().map(CardScryfallDto::toCard).toList());
+
+                if (setCardsPage == null) throw new NullPointerException("No cards found");
+                var cardsList = setCardsPage.data().stream().map(ScryfallCard::toCard).toList();
+                cardsList.forEach(c -> c.setSet(currentSet));
+                cardRepository.saveAll(cardsList);
+
                 more = setCardsPage.has_more();
                 searchUri = setCardsPage.next_page();
             } while (more);

@@ -1,5 +1,12 @@
 .card-detail {
-    display: flex;
-    justify-content: space-between;
-    padding-right: 50px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  padding-right: 50px;
+}
+
+.card-attribute {
+  text-align: left;
+  white-space: pre-wrap;
+  max-width: 70%;
 }

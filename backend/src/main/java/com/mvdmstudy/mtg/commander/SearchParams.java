@@ -17,7 +17,7 @@ public class SearchParams { //eigen Specification<Card> klasse maken?
 
     @NotBlank(message = "name search mandatory")
     private String name;
-    private String type_line;
+    private String types;
     private String text;
 
 
@@ -26,14 +26,14 @@ public class SearchParams { //eigen Specification<Card> klasse maken?
         Specification<Card> nameSpecification = (root, query, builder) ->
                 builder.like(builder.upper(root.get("name").as(String.class)), "%".concat(name.toUpperCase()).concat("%"));
         specsList.add(nameSpecification);
-        if (type_line != null) {
+        if (types != null) {
             Specification<Card> typeSpecification = (root, query, builder) ->
-                    builder.like(builder.upper(root.get("type_line").as(String.class)), "%" + type_line.toUpperCase() + "%");
+                    builder.like(builder.upper(root.get("types").as(String.class)), "%" + types.toUpperCase() + "%");
             specsList.add(typeSpecification);
         }
         if (text != null) {
             Specification<Card> textSpecification = (root, query, builder) ->
-                    builder.like(builder.upper(root.get("oracle_text").as(String.class)), "%" + text.toUpperCase() + "%");
+                    builder.like(builder.upper(root.get("text").as(String.class)), "%" + text.toUpperCase() + "%");
             specsList.add(textSpecification);
         }
 

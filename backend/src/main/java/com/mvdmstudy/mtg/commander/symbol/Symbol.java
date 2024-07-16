@@ -19,13 +19,13 @@ public class Symbol {
 
     private String symbol;
 
-    private String svg_uri;
+    private String svgUri;
 
     private String english;
 
-    public Symbol(String symbol, String english, String svg_uri){
+    public Symbol(String symbol, String english, String svgUri) {
         this.symbol = symbol;
-        this.svg_uri = svg_uri;
+        this.svgUri = svgUri;
         this.english = english;
     }
 }

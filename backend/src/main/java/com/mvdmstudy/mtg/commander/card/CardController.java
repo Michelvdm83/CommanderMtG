@@ -18,21 +18,21 @@ public class CardController {
     private final CardRepository cardRepository;
 
     @GetMapping
-    public ResponseEntity<List<Card>> searchBy(@Valid SearchParams params) {//Pageable toevoegen
+    public List<CardDto> searchBy(@Valid SearchParams params) {
         Specification<Card> newPredicate = params.getSpecification();
-        var list = cardRepository.findAll(newPredicate);
-        return ResponseEntity.ok(list);
+        return cardRepository.findAll(newPredicate).stream().map(CardDto::from).toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Card> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(cardRepository.findById(id).get());
+    public ResponseEntity<CardDto> findById(@PathVariable UUID id) {
+        var card = cardRepository.findById(id);
+        if (card.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(CardDto.from(card.get()));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Card>> findByName(@RequestParam String text) {//, @RequestParam(required = false) String types
-        return ResponseEntity.ok(cardRepository.findByNameContainingIgnoreCase(text));
-//                ResponseEntity.ok(cardRepository.findByNameContainingIgnoreCaseAndTypesContainingIgnoreCase(text, types));
+    public List<CardDto> findByName(@RequestParam String text) {
+        return cardRepository.findByNameContainingIgnoreCase(text).stream().map(CardDto::from).toList();
     }
 
 }

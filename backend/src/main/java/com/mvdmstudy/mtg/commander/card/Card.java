@@ -1,65 +1,51 @@
 package com.mvdmstudy.mtg.commander.card;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import com.mvdmstudy.mtg.commander.cardface.CardFace;
+import com.mvdmstudy.mtg.commander.cardset.CardSet;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class Card {
     @Id
+    @GeneratedValue
     private UUID id;
 
-    private UUID oracle_id;
+    private UUID oracleId;
 
     private String name;
 
-    private String mana_cost;//rename naar manaCost
-    // private Integer cmc;
+    private String manaCost;
+    private Integer cmc;
 
-    //    @Column(name = "type_line") : rename naar types
-    private String type_line;
+    private String types;
 
     @Column(columnDefinition = "TEXT")
-    private String oracle_text;
-    /*
     private String text;
-     */
 
-    private String power;
-    /*
+    private Double power;
+    private String powerAsString;
 
-    private Integer power;
-    private Boolean isPowerStarred;
-
-     */
-
-    private String toughness;
-    /*
-    private String toughness;
-    private String isToughnessStarred;
-     */
+    private Double toughness;
+    private String toughnessAsString;
 
     private String imageURL;
 
-/*    @ManyToOne
-        private SetData set;
+    private boolean commanderLegal;
+    private String colorIdentity;
 
-        private boolean commanderLegal;
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    private Set<CardFace> cardFaces;
 
+    @ManyToOne
+    private CardSet set;
 
-
-        private CardBack;
-        private SplitPart; (geen imgUrl,
-        colorIdentity? colors?
- */
 }
