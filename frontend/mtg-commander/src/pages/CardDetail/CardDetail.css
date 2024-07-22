@@ -1,12 +1,31 @@
-.card-detail {
+.card-detail-page {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
+  width: 100%;
   padding-right: 50px;
 }
 
+.card-image {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 5px;
+  margin-left: 5px;
+}
+
+.card-info {
+  justify-self: flex-end;
+  max-width: 40%;
+  border-color: black;
+  border-style: solid;
+  margin-right: 5px;
+}
+
 .card-attribute {
+  border-bottom: 2px lightgray solid;
   text-align: left;
   white-space: pre-wrap;
-  max-width: 70%;
+  padding-left: 5px;
+  padding-top: 5px;
 }

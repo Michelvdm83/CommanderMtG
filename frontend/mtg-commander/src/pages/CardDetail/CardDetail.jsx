@@ -17,12 +17,16 @@ export default function CardDetail() {
 
   function getImage() {
     if (card.imageURL) {
-      return <img src={card.imageURL} width={300} height={450} />;
+      return (
+        <div className="card-image">
+          <img src={card.imageURL} width={300} height={450} />
+        </div>
+      );
     } else if (card.faces) {
       const front = getFace("front");
       const back = getFace("back");
       return (
-        <div className="card-detail">
+        <div className="card-image">
           <img src={front.imageURL} width={300} height={450} key={front.name} />
           <img src={back.imageURL} width={300} height={450} key={back.name} />
           {/* {card.faces.map((face) => (
@@ -38,9 +42,13 @@ export default function CardDetail() {
   }
 
   function getText() {
-    if (card.text) {
+    if (card.text !== null && card.text !== undefined) {
       return <div className="card-attribute">{card.text}</div>;
-    } else if (card.faces) {
+    } else if (
+      card.faces !== null &&
+      card.faces !== undefined &&
+      card.faces.length > 0
+    ) {
       const front = getFace("front");
       const back = getFace("back");
 
@@ -58,16 +66,18 @@ export default function CardDetail() {
       return <></>;
     }
     return (
-      <div className="card-detail">
+      <div className="card-detail-page">
         {getImage()}
-        <div>
-          <div className="card-attribute">{card.name}</div>
-          <div className="card-attribute">{card.types}</div>
+        <div className="card-info">
+          <div className="card-attribute">name: {card.name}</div>
+          <div className="card-attribute">type: {card.types}</div>
           {getText()}
           {card.power == null ? (
             <></>
           ) : (
-            <div>{card.power + "/" + card.toughness}</div>
+            <div className="card-attribute">
+              {card.power + "/" + card.toughness}
+            </div>
           )}
         </div>
       </div>

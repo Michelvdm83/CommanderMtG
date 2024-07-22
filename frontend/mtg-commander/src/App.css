@@ -9,8 +9,10 @@
   flex-direction: column;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
   gap: 5px;
 }
+
 .nav-bar {
   display: grid;
   grid-template-columns: 0fr repeat(2, auto) 0fr;
@@ -29,7 +31,4 @@
 
 .nav-bar-item:last-child {
   margin-left: auto;
-}
-
-.search {
 }

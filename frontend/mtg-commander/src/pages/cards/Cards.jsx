@@ -7,6 +7,10 @@ import "./Cards.css";
 
 export default function Cards({ /*cards, setCards, */ nameSearch }) {
   const [cards, setCards] = useState([]);
+  const [page, setPage] = useState(0);
+  const [isLastPage, setIsLastPage] = useState(true);
+  const [isFirstPage, setIsFirstPage] = useState(true);
+
   const regex = new RegExp("(?<={)([^}]+)(?=})", "g");
   const imgURI = "https://svgs.scryfall.io/card-symbols/";
 
@@ -20,11 +24,16 @@ export default function Cards({ /*cards, setCards, */ nameSearch }) {
       return;
     }
     lastSearch = nameSearch;
+    setCards((cards) => []);
     axios
-      .get(`http://localhost:8080?name=${nameSearch}`)
-      .then((response) => setCards(response.data))
+      .get(`http://localhost:8080?name=${nameSearch}&page=${page}`)
+      .then((response) => {
+        setCards((cards) => response.data.content);
+        setIsFirstPage(response.data.first);
+        setIsLastPage(response.data.last);
+      })
       .catch((error) => console.log(error));
-  }, [nameSearch]);
+  }, [nameSearch, page]);
 
   function handleMouseEnter(event, img) {
     document.documentElement.style.setProperty(
@@ -44,17 +53,29 @@ export default function Cards({ /*cards, setCards, */ nameSearch }) {
   }
 
   return (
-    <div className="cards-list" onMouseMove={(event) => updateMouseXY(event)}>
-      {cards &&
-        cards.map((card) => (
-          <Card
-            card={card}
-            handleMouseEnter={handleMouseEnter}
-            handleMouseLeave={handleMouseLeave}
-            key={card.id}
-          />
-        ))}
-      {<div className="hover-image" style={{ left: hoverX, top: hoverY }} />}
+    <div className="search-results">
+      {isFirstPage ? (
+        <div />
+      ) : (
+        <button onClick={() => setPage(page - 1)}>previous</button>
+      )}
+      <div className="cards-list" onMouseMove={(event) => updateMouseXY(event)}>
+        {cards.length > 0 &&
+          cards.map((card) => (
+            <Card
+              card={card}
+              handleMouseEnter={handleMouseEnter}
+              handleMouseLeave={handleMouseLeave}
+              key={card.id}
+            />
+          ))}
+        {<div className="hover-image" style={{ left: hoverX, top: hoverY }} />}
+      </div>
+      {isLastPage ? (
+        <div />
+      ) : (
+        <button onClick={() => setPage(page + 1)}>next</button>
+      )}
     </div>
   );
 }

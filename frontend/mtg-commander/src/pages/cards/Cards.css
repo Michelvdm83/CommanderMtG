@@ -1,21 +1,31 @@
-:root{
-    --backgroundC: "";
-    --imgDisplay: none;
+:root {
+  --backgroundC: "";
+  --imgDisplay: none;
+}
+
+.search-results {
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: 50px;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 80%;
 }
 
 .cards-list {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .hover-image {
-    position: absolute;
-    width: 150px;/*745x1040*/
-    height: 208px;
-    background-size:contain;
-    background-image: var(--backgroundC);
-    background-repeat: no-repeat;
-    display: var(--imgDisplay);
-    z-index: 10000;
+  position: absolute;
+  width: 150px; /*745x1040*/
+  height: 208px;
+  background-size: contain;
+  background-image: var(--backgroundC);
+  background-repeat: no-repeat;
+  display: var(--imgDisplay);
+  z-index: 10000;
 }

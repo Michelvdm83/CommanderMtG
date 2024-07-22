@@ -7,12 +7,12 @@ export default function Card({ card, handleMouseEnter, handleMouseLeave }) {
 
   const regex = new RegExp("(?<={)([^}]+)(?=})", "g");
   const imgURI = "https://svgs.scryfall.io/card-symbols/";
-  const [showDetail, setShowDetail] = useState(false);
-  const cost = card.manaCost
-    ? card.manaCost
-    : card.faces
-    ? card.faces.find(isFront).manaCost
-    : "";
+  const cost =
+    card.manaCost !== null && card.manaCost !== undefined
+      ? card.manaCost
+      : card.faces
+      ? card.faces.find(isFront).manaCost
+      : "";
   const imageURL = card.imageURL ? card.imageURL : getFrontImage();
 
   function getFrontImage() {
@@ -33,7 +33,7 @@ export default function Card({ card, handleMouseEnter, handleMouseLeave }) {
         onMouseLeave={handleMouseLeave}
       >
         {card.name}{" "}
-        {cost.match(regex).map((symbol, index) => (
+        {cost.match(regex)?.map((symbol, index) => (
           <img
             key={symbol + ":" + index}
             src={imgURI + symbol + ".svg"}

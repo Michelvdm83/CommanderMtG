@@ -1,7 +1,6 @@
 package com.mvdmstudy.mtg.commander;
 
 import com.mvdmstudy.mtg.commander.card.Card;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,10 +12,10 @@ import java.util.ArrayList;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SearchParams { //eigen Specification<Card> klasse maken?
+public class SearchParams {
 
-    @NotBlank(message = "name search mandatory")
-    private String name;
+    //@NotBlank(message = "name search mandatory")
+    private String name = "";
     private String types;
     private String text;
 
