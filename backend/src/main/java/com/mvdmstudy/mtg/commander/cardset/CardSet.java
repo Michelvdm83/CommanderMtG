@@ -6,12 +6,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDate;
+import java.util.Set;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -19,22 +19,26 @@ import java.util.UUID;
 @Setter
 public class CardSet {
 
-    @Id
-    @GeneratedValue
-    private UUID id;
+  @Id @GeneratedValue private UUID id;
 
-    private String code;
+  private String code;
 
-    private String name;
+  private String name;
 
-    private String searchUri;
+  private String searchUri;
 
-    @OneToMany(mappedBy = "set")
-    private Set<Card> cards;
+  private LocalDate releaseDate;
 
-    public CardSet(ScryfallCardSet scryfallCardSet) {
-        this.code = scryfallCardSet.getCode();
-        this.name = scryfallCardSet.getName();
-        this.searchUri = scryfallCardSet.getSearch_uri();
-    }
+  private boolean cardsInDatabase;
+
+  @OneToMany(mappedBy = "set")
+  private Set<Card> cards;
+
+  public CardSet(ScryfallCardSet scryfallCardSet) {
+    cardsInDatabase = false;
+    this.code = scryfallCardSet.getCode();
+    this.name = scryfallCardSet.getName();
+    this.searchUri = scryfallCardSet.getSearch_uri();
+    this.releaseDate = scryfallCardSet.getReleased_at();
+  }
 }

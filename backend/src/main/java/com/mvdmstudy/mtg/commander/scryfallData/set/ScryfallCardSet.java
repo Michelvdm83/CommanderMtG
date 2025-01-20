@@ -1,22 +1,23 @@
 package com.mvdmstudy.mtg.commander.scryfallData.set;
 
+import java.time.LocalDate;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class ScryfallCardSet {
 
-    private UUID id;
+  private UUID id;
 
-    private String code;
+  private String code;
 
-    private String name;
+  private String name;
 
-    private String search_uri;
+  private String search_uri;
 
+  private LocalDate released_at;
 }

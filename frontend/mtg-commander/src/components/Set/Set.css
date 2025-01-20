@@ -1,0 +1,13 @@
+.set {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.set-indb {
+    color: #10b981;
+}
+
+.set-not-indb {
+    color: #dc2626;
+}
